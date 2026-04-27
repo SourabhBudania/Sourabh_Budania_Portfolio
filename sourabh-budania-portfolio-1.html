@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sourabh Budania — High-Retention Video Editor</title>
+<meta name="description" content="Sourabh Budania is a High-Retention Video Editor specializing in cinematic reels, brand films, and scroll-stopping short content that drives views, engagement, and conversions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #050508;
+    --surface: #0d0d14;
+    --border: rgba(255,255,255,0.07);
+    --accent: #e8ff47;
+    --accent2: #ff6b47;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --font-serif: 'Instrument Serif', serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); overflow-x: hidden; cursor: none; }
+
+  /* CURSOR */
+  .cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; transition: transform 0.15s ease; mix-blend-mode: difference; }
+  .cursor-ring { width: 36px; height: 36px; border: 1px solid rgba(232,255,71,0.4); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; transition: transform 0.4s ease, width 0.3s, height 0.3s; }
+
+  /* NOISE */
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.35; pointer-events: none; z-index: 0; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 4rem; background: rgba(5,5,8,0.7); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .nav-logo { font-family: var(--font-head); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta { background: var(--accent); color: #000; border: none; padding: 0.55rem 1.4rem; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; cursor: none; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,255,71,0.3); }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 8rem 4rem 4rem; position: relative; overflow: hidden; gap: 4rem; }
+  .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent); }
+  .glow { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; }
+  .glow-1 { width: 500px; height: 500px; background: rgba(232,255,71,0.04); top: 10%; left: -10%; }
+  .glow-2 { width: 400px; height: 400px; background: rgba(255,107,71,0.04); top: 30%; right: -5%; }
+
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border); padding: 0.35rem 0.9rem; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 2rem; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+
+  .hero-name { font-family: var(--font-head); font-weight: 800; font-size: clamp(3rem, 5.5vw, 6rem); line-height: 0.92; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+  .hero-name .line2 { color: transparent; -webkit-text-stroke: 1px rgba(232,255,71,0.6); }
+
+  .hero-desc { font-size: 0.85rem; line-height: 1.8; color: var(--muted); max-width: 440px; margin-bottom: 2.5rem; }
+  .hero-desc em { font-family: var(--font-serif); font-style: italic; color: var(--text); font-size: 1rem; }
+
+  .hero-actions { display: flex; gap: 1rem; align-items: center; }
+  .btn-primary { background: var(--accent); color: #000; padding: 0.8rem 2rem; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; cursor: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(232,255,71,0.35); }
+  .btn-ghost { border: 1px solid var(--border); color: var(--muted); padding: 0.8rem 2rem; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; cursor: none; transition: border-color 0.2s, color 0.2s; }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TERMINAL (hero right) */
+  .hero-right { position: relative; }
+  .terminal { background: var(--surface); border: 1px solid var(--border); position: relative; overflow: hidden; animation: fadeUp 1s ease 0.3s both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .terminal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2), transparent); }
+  .terminal-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+  .terminal-title { margin-left: auto; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; }
+  .terminal-body { padding: 1.5rem; font-size: 0.78rem; line-height: 2; }
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--text); }
+  .t-comment { color: var(--muted); }
+  .t-key { color: #47c4ff; }
+  .t-val { color: #b8a3ff; }
+  .t-str { color: #79d483; }
+  .t-num { color: #ffb347; }
+  .t-cursor { display: inline-block; width: 8px; height: 14px; background: var(--accent); vertical-align: middle; animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* STATS STRIP */
+  .stats-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2rem 4rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); position: relative; z-index: 1; }
+  .stat-item { background: var(--bg); padding: 2rem; text-align: center; }
+  .stat-num { font-family: var(--font-head); font-size: 3rem; font-weight: 800; color: var(--accent); letter-spacing: -0.04em; line-height: 1; }
+  .stat-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.5rem; }
+
+  /* SECTION BASE */
+  section { padding: 6rem 4rem; position: relative; z-index: 1; }
+  .section-tag { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
+  .section-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+  .section-title { font-family: var(--font-head); font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4rem; }
+  .section-title span { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--muted); }
+
+  /* WORK (projects equivalent) */
+  .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .project-card { background: var(--bg); padding: 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+  .project-card:hover { background: var(--surface); }
+  .project-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--accent); transition: width 0.4s ease; }
+  .project-card:hover::after { width: 100%; }
+  .project-num { font-family: var(--font-head); font-size: 4rem; font-weight: 800; color: rgba(232,255,71,0.06); line-height: 1; position: absolute; top: 1.5rem; right: 2rem; letter-spacing: -0.05em; transition: color 0.3s; }
+  .project-card:hover .project-num { color: rgba(232,255,71,0.14); }
+  .project-name { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.8rem; }
+  .project-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+  .project-metric { display: inline-flex; align-items: baseline; gap: 0.4rem; margin-bottom: 1.5rem; }
+  .project-metric-num { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
+  .project-metric-label { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+  .project-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; color: var(--accent); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: gap 0.2s; }
+  .project-link:hover { gap: 0.8rem; }
+
+  /* EXPERIENCE (services equivalent) */
+  .exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .exp-card { background: var(--bg); padding: 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+  .exp-card:hover { background: var(--surface); }
+  .exp-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--accent); transition: width 0.4s ease; }
+  .exp-card:hover::after { width: 100%; }
+  .exp-org { font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .exp-role { font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.2; }
+  .exp-points { list-style: none; }
+  .exp-points li { font-size: 0.78rem; color: var(--muted); line-height: 1.7; padding: 0.4rem 0; border-bottom: 1px solid var(--border); padding-left: 1.2rem; position: relative; }
+  .exp-points li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.65rem; }
+  .exp-tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.5rem; }
+  .tag { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--border); color: var(--muted); padding: 0.25rem 0.65rem; transition: border-color 0.2s, color 0.2s; }
+  .exp-card:hover .tag { border-color: rgba(232,255,71,0.3); color: var(--accent); }
+
+  /* SKILLS */
+  .skills-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; }
+  .skills-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.9; }
+  .skills-desc strong { color: var(--text); font-weight: 500; }
+  .skills-grid { display: grid; gap: 0.5rem; }
+  .skill-row { display: grid; grid-template-columns: 160px 1fr auto; align-items: center; gap: 1.5rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+  .skill-name { font-size: 0.72rem; letter-spacing: 0.05em; color: var(--muted); text-transform: uppercase; }
+  .skill-bar-wrap { height: 3px; background: rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+  .skill-bar-fill { height: 100%; background: var(--accent); transform-origin: left; animation: barGrow 1.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  @keyframes barGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .skill-pct { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.05em; white-space: nowrap; }
+
+  /* PROCESS (certs equivalent) */
+  .certs-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .cert-item { background: var(--bg); padding: 2rem 2.5rem; display: flex; gap: 1.5rem; align-items: flex-start; transition: background 0.2s; }
+  .cert-item:hover { background: var(--surface); }
+  .cert-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .cert-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.3rem; }
+  .cert-issuer { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; line-height: 1.5; }
+
+  /* TESTIMONIALS (edu equivalent) */
+  .edu-timeline { position: relative; padding-left: 2rem; margin-left: 2rem; }
+  .edu-timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
+  .edu-item { position: relative; padding: 0 0 3rem 2rem; }
+  .edu-item::before { content: ''; position: absolute; left: -2rem; top: 0.35rem; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); box-shadow: 0 0 0 4px rgba(232,255,71,0.12); }
+  .edu-year { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .edu-deg { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .edu-school { font-size: 0.78rem; color: var(--muted); }
+  .edu-grade { display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.7rem; border: 1px solid rgba(232,255,71,0.2); color: var(--accent); font-size: 0.65rem; letter-spacing: 0.12em; }
+
+  /* REEL section */
+  .reel-wrap { border: 1px solid var(--border); background: var(--surface); position: relative; overflow: hidden; max-width: 860px; }
+  .reel-wrap::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2), transparent); }
+  .reel-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); }
+  .reel-bar-title { margin-left: auto; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; }
+  .reel-body { aspect-ratio: 16/9; background: var(--bg); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .reel-body iframe { width: 100%; height: 100%; border: none; display: block; }
+  .reel-placeholder-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
+  .reel-scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0px, rgba(0,0,0,.12) 1px, transparent 1px, transparent 4px); pointer-events: none; }
+  .play-btn { width: 72px; height: 72px; border: 1px solid rgba(232,255,71,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s, transform 0.2s; position: relative; z-index: 2; animation: ringPulse 2.5s ease-in-out infinite; }
+  .play-btn:hover { background: rgba(232,255,71,0.1); transform: scale(1.08); }
+  @keyframes ringPulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(232,255,71,0.25); } 50%{ box-shadow: 0 0 0 18px rgba(232,255,71,0); } }
+  .reel-hint { font-size: 0.65rem; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-top: 1.2rem; position: relative; z-index: 2; }
+  .reel-corner { position: absolute; font-size: 0.6rem; letter-spacing: 0.18em; color: rgba(232,255,71,0.3); z-index: 2; font-family: var(--font-mono); }
+  .reel-corner.tl{top:12px;left:14px} .reel-corner.tr{top:12px;right:14px} .reel-corner.bl{bottom:12px;left:14px} .reel-corner.br{bottom:12px;right:14px}
+
+  /* CONTACT */
+  .contact-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .contact-heading { font-family: var(--font-head); font-size: clamp(2.5rem, 4vw, 4.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; }
+  .contact-heading .italic { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--muted); }
+  .contact-links { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .contact-link { background: var(--bg); padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: var(--text); transition: background 0.2s; }
+  .contact-link:hover { background: rgba(232,255,71,0.05); }
+  .contact-link-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+  .contact-link-val { font-size: 0.85rem; margin-top: 0.2rem; }
+  .contact-arrow { color: var(--accent); font-size: 1.2rem; }
+
+  /* FOOTER */
+  footer { padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+  .footer-copy { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; }
+  .footer-name { font-family: var(--font-head); font-size: 0.8rem; font-weight: 700; color: var(--accent); }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* HERO LEFT ANIMS */
+  .hero-left > * { animation: fadeUp 0.9s ease both; }
+  .hero-left > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-left > *:nth-child(2) { animation-delay: 0.2s; }
+  .hero-left > *:nth-child(3) { animation-delay: 0.3s; }
+  .hero-left > *:nth-child(4) { animation-delay: 0.4s; }
+
+  /* NOTE text */
+  .note-text { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 1.5rem; }
+  .note-text a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+    .hero-right { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 0; }
+    .exp-grid, .projects-grid, .certs-list { grid-template-columns: 1fr; }
+    .skills-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SB</div>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/91XXXXXXXXXX?text=Hi%20Sourabh%2C%20I%20want%20to%20book%20a%20project" class="nav-cta" target="_blank">Book a Project</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="hero-grid-bg"></div>
+
+  <div class="hero-left">
+    <div class="hero-badge">Available for Projects · India</div>
+    <h1 class="hero-name">
+      Sourabh<br>
+      <span class="line2">Budania</span>
+    </h1>
+    <p class="hero-desc">
+      <em>High-Retention Video Editor</em> — crafting content that keeps viewers watching. Reels that rack up views, brand films that drive conversions, short content that stops the scroll.<br><br>
+      2 years · 50+ projects · <em>Premiere Pro, After Effects, DaVinci Resolve</em>.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-ghost">Get In Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <div class="terminal-title">sourabh_profile.json</div>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">$ </span><span class="t-cmd">cat sourabh_profile.json</span></div>
+        <div><span class="t-comment">{</span></div>
+        <div>&nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-str">"Sourabh Budania"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-str">"High-Retention Video Editor"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-str">"India 🇮🇳"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"experience"</span>: <span class="t-str">"2 years"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"projects_delivered"</span>: <span class="t-num">50</span>,</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"tools"</span>: [</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Adobe Premiere Pro"</span>,</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Adobe After Effects"</span>,</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"DaVinci Resolve"</span></div>
+        <div>&nbsp;&nbsp;],</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"speciality"</span>: <span class="t-str">"High-retention cuts"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"turnaround"</span>: <span class="t-str">"48h avg"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="t-key">"open_to_work"</span>: <span class="t-val">true</span></div>
+        <div><span class="t-comment">}</span></div>
+        <div style="margin-top:0.5rem"><span class="t-prompt">$ </span><span class="t-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">2+</div>
+    <div class="stat-label">Years Experience</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">50+</div>
+    <div class="stat-label">Projects Delivered</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">48h</div>
+    <div class="stat-label">Avg Turnaround</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">3x</div>
+    <div class="stat-label">Watch Time Lift</div>
+  </div>
+</div>
+
+<!-- REEL -->
+<section id="reel">
+  <div class="section-tag">Showreel 2024</div>
+  <h2 class="section-title reveal">Watch the <span>work</span></h2>
+  <div class="reel-wrap reveal">
+    <div class="reel-bar">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+      <div class="reel-bar-title">sourabh_showreel_2024.mp4</div>
+    </div>
+    <div class="reel-body" id="reelBody">
+      <!--
+        TO EMBED YOUR REEL:
+        1. Get your YouTube video ID (e.g. dQw4w9WgXcQ from youtube.com/watch?v=dQw4w9WgXcQ)
+        2. Uncomment the iframe below and paste your video ID
+        3. Delete the reel-placeholder-inner div
+
+        <iframe
+          src="https://www.youtube.com/embed/YOUR_VIDEO_ID?rel=0&modestbranding=1&color=white"
+          title="Sourabh Budania Showreel 2024"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      -->
+      <div class="reel-scanlines"></div>
+      <span class="reel-corner tl">REC ●</span>
+      <span class="reel-corner tr">HD 1080p</span>
+      <span class="reel-corner bl">SOURABH BUDANIA</span>
+      <span class="reel-corner br">2024</span>
+      <div class="reel-placeholder-inner">
+        <div class="play-btn" onclick="loadReel()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#e8ff47" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <p class="reel-hint">Paste YouTube / Vimeo link</p>
+      </div>
+    </div>
+  </div>
+  <p class="note-text reveal">Click the play button to paste your YouTube or Vimeo URL · Or edit the HTML comment above to embed permanently</p>
+</section>
+
+<!-- FEATURED WORK -->
+<section id="work" style="padding-top:0;">
+  <div class="section-tag">Selected Projects</div>
+  <h2 class="section-title reveal">Things I've <span>edited</span></h2>
+  <div class="projects-grid reveal">
+
+    <div class="project-card">
+      <div class="project-num">01</div>
+      <div class="project-name">Fashion Brand Launch</div>
+      <p class="project-desc">Full post-production for a clothing brand's product launch — cinematic grade, motion titles, and fast-cut transitions to match their bold visual identity.</p>
+      <div class="project-metric">
+        <span class="project-metric-num">2.4M</span>
+        <span class="project-metric-label">Views on Instagram</span>
+      </div>
+      <div class="exp-tag-row" style="margin-bottom:1.5rem;">
+        <span class="tag">Brand Film</span><span class="tag">Color Grade</span><span class="tag">Motion Titles</span>
+      </div>
+      <a href="#" class="project-link">View Project →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">02</div>
+      <div class="project-name">YouTube Creator Growth</div>
+      <p class="project-desc">Rebuilt editing style for a growing YouTube creator — hook-first pacing, retention-focused structure, and B-roll integration from the first 3 seconds.</p>
+      <div class="project-metric">
+        <span class="project-metric-num">68%</span>
+        <span class="project-metric-label">Watch Time Lift</span>
+      </div>
+      <div class="exp-tag-row" style="margin-bottom:1.5rem;">
+        <span class="tag">Long-Form</span><span class="tag">Retention Edit</span><span class="tag">YouTube</span>
+      </div>
+      <a href="#" class="project-link">View Project →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">03</div>
+      <div class="project-name">Viral Reel Series</div>
+      <p class="project-desc">10-reel series for a lifestyle brand — tight cuts, trending audio sync, and pattern-interrupt hooks in the first 3 seconds. Built for the algorithm.</p>
+      <div class="project-metric">
+        <span class="project-metric-num">500K+</span>
+        <span class="project-metric-label">Combined Views</span>
+      </div>
+      <div class="exp-tag-row" style="margin-bottom:1.5rem;">
+        <span class="tag">Instagram Reels</span><span class="tag">Short Content</span><span class="tag">Audio Sync</span>
+      </div>
+      <a href="#" class="project-link">View Project →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">04</div>
+      <div class="project-name">Tech Product Ad (VFX)</div>
+      <p class="project-desc">Full post-production for a tech product ad — After Effects compositing, kinetic text animations, and professional DaVinci color grade throughout.</p>
+      <div class="project-metric">
+        <span class="project-metric-num">3.2x</span>
+        <span class="project-metric-label">CTR vs Previous Ads</span>
+      </div>
+      <div class="exp-tag-row" style="margin-bottom:1.5rem;">
+        <span class="tag">After Effects</span><span class="tag">VFX</span><span class="tag">Motion Graphics</span>
+      </div>
+      <a href="#" class="project-link">View Project →</a>
+    </div>
+
+  </div>
+  <p class="note-text">↑ Replace project titles, descriptions, and metrics with your real work</p>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-tag">What I Deliver</div>
+  <h2 class="section-title reveal">Services that <span>perform</span></h2>
+  <div class="exp-grid reveal">
+
+    <div class="exp-card">
+      <div class="exp-org">Short-Form · Social Media</div>
+      <div class="exp-role">High-Retention Reels Editing</div>
+      <ul class="exp-points">
+        <li>Hook-first structure engineered to keep viewers watching past the 3-second mark.</li>
+        <li>Tight pacing, trending audio sync, and pattern-interrupt cuts for maximum engagement.</li>
+        <li>Platform-optimized for Instagram Reels, YouTube Shorts, and TikTok.</li>
+      </ul>
+      <div class="exp-tag-row">
+        <span class="tag">Premiere Pro</span><span class="tag">Retention</span><span class="tag">Audio Sync</span>
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <div class="exp-org">Long-Form · YouTube</div>
+      <div class="exp-role">YouTube Long-Form Editing</div>
+      <ul class="exp-points">
+        <li>Full episode editing — chapter flow, pacing optimization, and B-roll integration.</li>
+        <li>Audience retention structure from intro hook to end-screen CTA.</li>
+        <li>Color grade, audio leveling, and thumbnail consultation included.</li>
+      </ul>
+      <div class="exp-tag-row">
+        <span class="tag">Premiere Pro</span><span class="tag">Long-Form</span><span class="tag">Storytelling</span>
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <div class="exp-org">Brand Identity · Commercial</div>
+      <div class="exp-role">Cinematic Brand Videos</div>
+      <ul class="exp-points">
+        <li>Full cinematic post-production: color grade, sound design, and motion titles.</li>
+        <li>Visual identity consistency across your brand's entire content library.</li>
+        <li>Product ads, launch videos, and company reels — built to convert.</li>
+      </ul>
+      <div class="exp-tag-row">
+        <span class="tag">DaVinci Resolve</span><span class="tag">Color Grade</span><span class="tag">Brand</span>
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <div class="exp-org">Post-Production · VFX</div>
+      <div class="exp-role">Motion Graphics & VFX</div>
+      <ul class="exp-points">
+        <li>Kinetic text, animated lower-thirds, and UI animations that reinforce messaging.</li>
+        <li>After Effects compositing and visual effects for ads and content.</li>
+        <li>Custom motion graphics that make your brand feel premium and high-production.</li>
+      </ul>
+      <div class="exp-tag-row">
+        <span class="tag">After Effects</span><span class="tag">VFX</span><span class="tag">Motion</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-tag">Technical Proficiency</div>
+  <h2 class="section-title reveal">The <span>toolkit</span></h2>
+  <div class="skills-layout reveal">
+    <div class="skills-desc">
+      Working at the intersection of <strong>editing craft, motion design, and visual storytelling</strong>. Fluent across the full post-production pipeline — from rough cut to final delivery.
+    </div>
+    <div class="skills-grid">
+      <div class="skill-row">
+        <span class="skill-name">Premiere Pro</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:92%"></div></div>
+        <span class="skill-pct">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">After Effects</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:85%"></div></div>
+        <span class="skill-pct">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">DaVinci Resolve</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:80%"></div></div>
+        <span class="skill-pct">Proficient</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Color Grading</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:83%"></div></div>
+        <span class="skill-pct">Proficient</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Motion Graphics</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:78%"></div></div>
+        <span class="skill-pct">Proficient</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Sound Design</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:72%"></div></div>
+        <span class="skill-pct">Intermediate</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Storytelling</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:90%"></div></div>
+        <span class="skill-pct">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Retention Strategy</span>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:88%"></div></div>
+        <span class="skill-pct">Advanced</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" style="padding-top:0;">
+  <div class="section-tag">How It Works</div>
+  <h2 class="section-title reveal">My <span>process</span></h2>
+  <div class="certs-list reveal">
+    <div class="cert-item">
+      <div class="cert-icon">🎯</div>
+      <div>
+        <div class="cert-title">Understanding the Goal</div>
+        <div class="cert-issuer">Before touching the timeline — target audience, platform, emotion, and the action you want viewers to take. Strategy first, editing second.</div>
+      </div>
+    </div>
+    <div class="cert-item">
+      <div class="cert-icon">✂️</div>
+      <div>
+        <div class="cert-title">Editing & Storytelling</div>
+        <div class="cert-issuer">Strong hooks, momentum-driven pacing, color grade, and motion graphics that reinforce your message at every second of the video.</div>
+      </div>
+    </div>
+    <div class="cert-item">
+      <div class="cert-icon">🔄</div>
+      <div>
+        <div class="cert-title">Review & Revisions</div>
+        <div class="cert-issuer">Structured revision rounds included. Fast turnaround with clear communication at every stage. No guesswork, no ghosting.</div>
+      </div>
+    </div>
+    <div class="cert-item">
+      <div class="cert-icon">🚀</div>
+      <div>
+        <div class="cert-title">Delivery & Optimization</div>
+        <div class="cert-issuer">Final export in your required format + advice on thumbnail, caption, and upload timing for maximum reach and algorithmic performance.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-tag">Client Feedback</div>
+  <h2 class="section-title reveal">What clients <span>say</span></h2>
+  <div class="edu-timeline reveal">
+
+    <div class="edu-item">
+      <div class="edu-year">★★★★★ · Instagram · Lifestyle Brand</div>
+      <div class="edu-deg">"Completely transformed our content."</div>
+      <div class="edu-school">Sourabh's reels went from 10K average views to over 200K. He understands what keeps people watching — not just making things look good. The results speak for themselves.</div>
+      <div class="edu-grade">Rahul K. · Founder</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-year">★★★★★ · YouTube · 85K Subscribers</div>
+      <div class="edu-deg">"Watch time went up 60% in 3 months."</div>
+      <div class="edu-school">Fast turnaround, takes direction well, and the quality is genuinely professional. I saw measurable results within weeks of bringing him on. Highly recommend for any serious creator.</div>
+      <div class="edu-grade">Priya S. · YouTube Creator</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-year">★★★★★ · Brand Film · Fashion</div>
+      <div class="edu-deg">"Our ad's CTR was 3x the previous one."</div>
+      <div class="edu-school">The color grading and motion graphics were exactly what the brand needed. Cinematic quality at a freelance price — he delivered on time and went beyond the brief.</div>
+      <div class="edu-grade">Ananya M. · Marketing Lead</div>
+    </div>
+
+  </div>
+  <p class="note-text" style="margin-top:1rem;">↑ Replace with real client feedback once received</p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+    <div>
+      <div class="section-tag">Get In Touch</div>
+      <h2 class="contact-heading">
+        Let's create content<br>that <span class="italic">performs.</span>
+      </h2>
+    </div>
+    <div class="contact-links">
+      <a href="https://wa.me/91XXXXXXXXXX?text=Hi%20Sourabh%2C%20I%20want%20to%20book%20a%20project" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">WhatsApp</div>
+          <div class="contact-link-val">+91 XXXXX XXXXX</div>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="mailto:sourabh@yourdomain.com" class="contact-link">
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div class="contact-link-val">sourabh@yourdomain.com</div>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://calendly.com/YOUR_LINK" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">Book a Call</div>
+          <div class="contact-link-val">calendly.com/sourabh</div>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://instagram.com/YOUR_HANDLE" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">Instagram</div>
+          <div class="contact-link-val">@yourhandle</div>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://youtube.com/YOUR_CHANNEL" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">YouTube</div>
+          <div class="contact-link-val">youtube.com/c/sourabh</div>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+      <a href="https://linkedin.com/in/YOUR_PROFILE" class="contact-link" target="_blank">
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          <div class="contact-link-val">linkedin.com/in/sourabhbudania</div>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">© 2024 Sourabh Budania. Crafted with precision.</div>
+  <div class="footer-name">SB</div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.querySelectorAll('a, button, .exp-card, .project-card, .cert-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform += ' scale(2)'; ring.style.width = '60px'; ring.style.height = '60px'; });
+    el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; });
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+  function loadReel() {
+    const url = prompt('Paste your YouTube or Vimeo URL:');
+    if (!url) return;
+    const yt = url.match(/(?:v=|youtu\.be\/)([^&?/]+)/);
+    const vi = url.match(/vimeo\.com\/(\d+)/);
+    let embed = '';
+    if (yt) embed = `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0`;
+    else if (vi) embed = `https://player.vimeo.com/video/${vi[1]}?autoplay=1`;
+    if (embed) {
+      document.getElementById('reelBody').innerHTML = `<iframe src="${embed}" title="Showreel" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+    } else {
+      alert('Could not parse URL — use a YouTube or Vimeo link.');
+    }
+  }
+</script>
+</body>
+</html>
